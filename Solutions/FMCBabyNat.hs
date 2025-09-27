@@ -82,11 +82,19 @@ infixr 8 ^
 
 -- quotient
 (/) :: Nat -> Nat -> Nat
-(/) = undefined
+_ / O = undefined
+n / m = 
+  case monus n m of
+    O  -> O
+    r  -> S (r / m)
+
+infixl 9 /
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
-(%) = undefined
+(%) _ O = undefined
+(%) n m = monus n (m * (n / m))
+
 
 -- divides
 -- just for a change, we start by defining the "symbolic" operator
