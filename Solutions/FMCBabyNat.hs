@@ -93,7 +93,7 @@ infixl 9 /
 -- remainder
 (%) :: Nat -> Nat -> Nat
 (%) _ O = undefined
-(%) n m = monus n (m * (n / m))
+(%) n (S m) = monus n (m * (n / (S m)))
 
 
 -- divides
@@ -101,22 +101,33 @@ infixl 9 /
 -- and then define `devides` as a synonym to it
 -- again, outputs: O means False, S O means True
 (|||) :: Nat -> Nat -> Nat
-(|||) = undefined
+(|||) O _ = O
+(|||) _ O = S O
+(|||) n (S m) = 
+        case ((%) n (S m)) of 
+          O -> S O
+          _ -> O
+
+divides :: Nat -> Nat -> Nat
+divides = (|||)
+
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
 absDiff :: Nat -> Nat -> Nat
-absDiff = undefined
+absDiff n m = monus n m + monus m n 
 
 (|-|) :: Nat -> Nat -> Nat
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = S O
+factorial (S n) = (S n) * factorial n
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg (S _) = S O 
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
