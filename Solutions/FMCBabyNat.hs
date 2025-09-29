@@ -83,17 +83,19 @@ infixr 8 ^
 -- quotient
 (/) :: Nat -> Nat -> Nat
 _ / O = undefined
-n / m = 
+O / _ = O
+n / (S O) = n
+S n / S m = 
   case monus n m of
     O  -> O
-    r  -> S (r / m)
+    n  -> S (n / (S m))
 
 infixl 9 /
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
-(%) _ O = undefined
-(%) n (S m) = monus n (m * (n / (S m)))
+_ % O = undefined
+n % m = monus n (m * (n / m))
 
 
 -- divides
@@ -101,10 +103,10 @@ infixl 9 /
 -- and then define `devides` as a synonym to it
 -- again, outputs: O means False, S O means True
 (|||) :: Nat -> Nat -> Nat
-(|||) O _ = O
-(|||) _ O = S O
-(|||) n (S m) = 
-        case ((%) n (S m)) of 
+O ||| _ = O
+_ ||| O = S O
+n ||| m = 
+        case (m % n) of 
           O -> S O
           _ -> O
 
