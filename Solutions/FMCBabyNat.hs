@@ -83,12 +83,12 @@ infixr 8 ^
 -- quotient
 (/) :: Nat -> Nat -> Nat
 _ / O = undefined
-O / _ = O
 n / (S O) = n
-S n / S m = 
-  case monus n m of
-    O  -> O
-    n  -> S (n / (S m))
+n / S m = case monus n (S m) of
+    O  -> case monus (S m) n of 
+        O -> S O
+        _ -> O
+    r -> S (r / (S m))
 
 infixl 9 /
 
@@ -133,5 +133,11 @@ sg (S _) = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
-
+lo O a = undefined 
+lo (S O) a = undefined
+lo b O = undefined
+lo b (S a) = case monus (S a) b of 
+                  O -> case monus b (S a) of 
+                      O -> S O
+                      _ -> O
+                  _ -> S (lo b ((S a) / b))
