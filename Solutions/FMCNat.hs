@@ -34,23 +34,32 @@ instance Show Nat where
 
     -- zero  should be shown as O
     -- three should be shown as SSSO
-    show = undefined
+    show O = "O"
+    show (S n) = "S" ++ show n
 
 instance Eq Nat where
 
-    (==) = undefined
+    0 == 0 = True
+    S n == S m = n == m
+    _ == _ = False
 
 instance Ord Nat where
 
-    (<=) = undefined
+    O <= _ = True
+    (S _) <= O = False
+    S n <= S m = n <= m
 
     -- Ord does not REQUIRE defining min and max.
     -- Howevener, you should define them WITHOUT using (<=).
     -- Both are binary functions: max m n = ..., etc.
 
-    min = undefined
+    min O _ = O
+    min _ O = O
+    min (S n) (S m) = S (min n m)
 
-    max = undefined
+    max O n = n
+    max n O = n
+    max (S n) (S m) = S (max n m)
 
 
 ----------------------------------------------------------------
@@ -67,24 +76,31 @@ five  = S four
 six   = S five
 seven = S six
 eight = S seven
+nine  = S eight
+ten   = S nine
 
 ----------------------------------------------------------------
 -- internalized predicates
 ----------------------------------------------------------------
 
 isZero :: Nat -> Bool
-isZero = undefined
+isZero O = True
+isZero (S _) = False
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
-pred = undefined
+pred O = O
+pred (S n) = n
 
 even :: Nat -> Bool
-even = undefined
+even O = True
+even (S O) = False
+even (S(S n)) = even n 
 
 odd :: Nat -> Bool
-odd = undefined
-
+odd O = False
+odd (S O) = True
+odd (S(S n)) = odd n
 
 ----------------------------------------------------------------
 -- operations
@@ -92,7 +108,10 @@ odd = undefined
 
 -- addition
 (<+>) :: Nat -> Nat -> Nat
-(<+>) = undefined
+n <+> O   = n
+n <+> S m = S (n <+> m)
+
+infixl 6 <+>
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
@@ -101,8 +120,8 @@ odd = undefined
 monus :: Nat -> Nat -> Nat
 monus = undefined
 
-(-*) :: Nat -> Nat -> Nat
-(-*) = undefined
+(<->) :: Nat -> Nat -> Nat
+(<->) = undefined
 
 -- multiplication
 times :: Nat -> Nat -> Nat
