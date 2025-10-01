@@ -39,7 +39,7 @@ instance Show Nat where
 
 instance Eq Nat where
 
-    0 == 0 = True
+    O == O = True
     S n == S m = n == m
     _ == _ = False
 
@@ -61,6 +61,9 @@ instance Ord Nat where
     max n O = n
     max (S n) (S m) = S (max n m)
 
+    n >= m = m <= n
+    n < m = (n <= m) && not (n == m)
+    n > m = m < n
 
 ----------------------------------------------------------------
 -- some sugar
@@ -168,7 +171,12 @@ n <%> m = n <-> (m * (n </> m))
 
 -- euclidean division
 eucdiv :: (Nat, Nat) -> (Nat, Nat)
-eucdiv = undefined
+eucdiv (_, O) = error "division by O"
+eucdiv (n, m)
+  | n < m  = (O, n)
+  | otherwise  =
+     let (q, r) = eucdiv (n <-> m, m)
+      in (S q, r)
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
