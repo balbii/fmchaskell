@@ -118,35 +118,53 @@ infixl 6 <+>
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 monus :: Nat -> Nat -> Nat
-monus = undefined
+monus O _ = O
+monus n O = n
+monus (S n) (S m) = monus n m
 
 (<->) :: Nat -> Nat -> Nat
-(<->) = undefined
+(<->) = monus
+
+infixl 6 <->
 
 -- multiplication
 times :: Nat -> Nat -> Nat
-times = undefined
+times _  O = O
+times n (S m) = times n m + n
 
 (<*>) :: Nat -> Nat -> Nat
 (<*>) = times
 
+infixl 7 <*>
+
 -- power / exponentiation
 pow :: Nat -> Nat -> Nat
-pow = undefined
+pow _ O = S O
+pow n (S m) = (pow n m) * n
 
 exp :: Nat -> Nat -> Nat
-exp = undefined
+exp = pow
 
 (<^>) :: Nat -> Nat -> Nat
-(<^>) = undefined
+(<^>) = pow
+infixr 8 <^>
 
 -- quotient
 (</>) :: Nat -> Nat -> Nat
-(</>) = undefined
+_ </> O = undefined
+n </> (S O) = n
+n </> S m = case n <-> (S m) of
+    O  -> case (S m) <-> n of 
+        O -> S O
+        _ -> O
+    r -> S (r </> (S m))
+
+infixl 9 </>
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-(<%>) = undefined
+_ <%> O = undefined
+n <%> m = n <-> (m * (n </> m)) 
 
 -- euclidean division
 eucdiv :: (Nat, Nat) -> (Nat, Nat)
@@ -154,7 +172,12 @@ eucdiv = undefined
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
-(<|>) = undefined
+O <|> _ = False
+_ <|> O = True
+n <|> m = 
+        case (m <%> n) of 
+          O -> True
+          _ -> False
 
 divides = (<|>)
 
@@ -163,20 +186,30 @@ divides = (<|>)
 -- x `dist` y = |x - y|
 -- (Careful here: this - is the real minus operator!)
 dist :: Nat -> Nat -> Nat
-dist = undefined
+dist n m = (n <-> m) <+> (m <-> n)
 
 (|-|) = dist
+infixl 9 |-|
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = S O
+factorial (S n) = (S n) * factorial n
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg (S _) = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
+lo O a = undefined 
+lo (S O) a = undefined
+lo b O = undefined
+lo b (S a) = case (S a) <-> b of 
+                  O -> case b <-> (S a) of 
+                      O -> S O
+                      _ -> O
+                  _ -> S (lo b ((S a) </> b))
 
 
 ----------------------------------------------------------------
