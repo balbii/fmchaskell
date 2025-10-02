@@ -26,41 +26,54 @@ data Bool = False | True
 
 instance Show Bool where
 
-    show = undefined
+    show True  = "tt"
+    show False = "ff"
 
 instance Enum Bool where
 
-    toEnum  = undefined
+    fromEnum :: Bool -> Int
+    fromEnum True = 1
+    fromEnum False = 0
 
-    fromEnum  = undefined
+    toEnum :: Int -> Bool
+    toEnum 1 = True
+    toEnum 0 = False
 
 -- conjunction (AND)
 (&&) :: Bool -> Bool -> Bool
-(&&) = undefined
+False && _     = False
+_     && False = False
+True  && True  = True
 
 infixr 3 &&
 
 -- disjunction (OR)
 (||) :: Bool -> Bool -> Bool
-(||) = undefined
+True  || _     = True
+_     || True  = True
+False || False = False
 
 infixr 2 ||
 
 -- NAND (Sheffer stroke)
 (/|\) :: Bool -> Bool -> Bool
-(/|\) = undefined
+True /|\ True = False
+_    /|\ _    = True 
 
 infixr 2 /|\
 
 -- NOR (aka: Peirce arrow or Quine dagger)
 (\|/) :: Bool -> Bool -> Bool
-(\|/) = undefined
+False \|/ False = True
+_     \|/ _     = False
 
 infixr 2 \|/
 
 -- XOR (exclusive disjunction)
 (<=/=>) :: Bool -> Bool -> Bool
-(<=/=>) = undefined
+True  <=/=> False = True
+False <=/=> True  = True
+_     <=/=> _     = False
 
 infixr 2 <=/=>
 
