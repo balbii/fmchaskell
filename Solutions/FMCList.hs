@@ -66,20 +66,25 @@ tail (x : xs) = xs
 tail []       = []
 
 null :: [a] -> Bool
-null = undefined
+null [] = True
+null (x : xs) = False
 
 length :: Integral i => [a] -> i
-length = undefined
+length [] = 0
+length (x : xs) = length xs + 1
 
 sum :: Num a => [a] -> a
-sum = undefined
+sum [] = 0
+sum (x : xs) = x + sum xs 
 
 product :: Num a => [a] -> a
-product = undefined
+product [] = 1
+product (x : xs) = x * product xs 
 
 -- rev [3,0,0,7] = [7,0,0,3]
 reverse :: [a] -> [a]
-reverse = undefined
+reverse xs = reverse (tail xs) ++ [head xs]
+reverse [] = []
 
 (++) :: [a] -> [a] -> [a]
 [] ++ ys = ys
