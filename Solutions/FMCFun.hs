@@ -34,10 +34,14 @@ flip f a b = f b a
 
 -- ($) takes a function and a suitable argument and applies the function to the argument
 -- think: why would we ever want that?
+($) :: (a -> b) -> a -> b
+f $ x = f x
 
+infixr 0 $
+ 
 -- iterate: figure it out by its type
 iterate :: (a -> a) -> a -> [a]
-iterate = undefined
+iterate f x = x : iterate f (f x)
 
 -- orbit
 orbit = flip iterate
